@@ -17,6 +17,19 @@ export const App = () => {
   const {connectWallet, address, error, provider} = useWeb3()
   // State variable for us to know if user has our NFT.
   const [isNFTClaimed, setIsNFTClaimed] = React.useState(false)
+  // State to keep a loading state while the NFT is minting.
+  const [isMinting, setIsMinting] = React.useState(false)
+  const [membershipNftAddress, setMembershipNftAddress] = React.useState('')
+
+  // The signer is required to sign transactions on the blockchain.
+  // Without it we can only read data, not write.
+  const signer = provider ? provider.getSigner() : undefined
+
+  React.useEffect(() => {
+    if (!signer) return
+    // We pass the signer to the sdk, which enables us to interact with our deployed contract
+    sdk.setProviderOrSigner(signer)
+  }, [signer])
 
   React.useEffect(() => {
     if (!address) {
@@ -26,9 +39,12 @@ export const App = () => {
     const getIsNFTClaimed = async () => {
       await bundleDropModule.balanceOf(address, [0]).then(
         balance => {
+          console.log('balance:', balance)
           // nft claimed if balance > 0
+          console.log('balance.gt(0):', balance.gt(0))
           if (balance.gt(0)) {
             setIsNFTClaimed(true)
+            // TODO: get and set the membership NFT address
             console.log('🌟 this user has a membership NFT!')
           } else {
             setIsNFTClaimed(false)
@@ -54,13 +70,45 @@ export const App = () => {
     )
   }
 
+  const mintNft = () => {
+    setIsMinting(true)
+    bundleDropModule
+      .claim('0', 1)
+      .catch(error => {
+        console.error('error claiming nft', error)
+        setIsMinting(false)
+      })
+      .finally(() => {
+        setIsMinting(false)
+        setIsNFTClaimed(true)
+        setMembershipNftAddress(bundleDropModule.address)
+        console.log(
+          `🌊 Successfully Minted! Check it out on OpenSea: https://testnets.opensea.io/assets/${bundleDropModule.address}/0`,
+        )
+      })
+  }
+
   return (
     <LandingContainer>
       <Welcome />
       {isNFTClaimed ? (
-        <p>👀 user has a membership nft, now what!</p>
+        <div>
+          <p>
+            Membership nft:{' '}
+            <a
+              href={`https://testnets.opensea.io/assets${membershipNftAddress}/0`}
+            >
+              View on Opensea
+            </a>{' '}
+          </p>
+        </div>
       ) : (
-        <p>Claim nft!</p>
+        <div className="mint-nft">
+          <h1>Mint your free 🍪DAO Membership NFT</h1>
+          <button disabled={isMinting} onClick={() => mintNft()}>
+            {isMinting ? 'Minting...' : 'Mint your nft (FREE)'}
+          </button>
+        </div>
       )}
     </LandingContainer>
   )
