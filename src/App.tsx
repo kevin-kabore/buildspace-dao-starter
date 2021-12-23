@@ -11,7 +11,9 @@ const bundleDropModule = sdk.getBundleDropModule(
 export const LandingContainer: React.FC = ({children}) => (
   <div className="landing">{children}</div>
 )
-const Welcome: React.FC = () => <h2>Welcome to the AfroBuildersDAO</h2>
+const Welcome: React.FC<{isMember: boolean}> = ({isMember}) => (
+  <h2> {!isMember ? 'Welcome to the AfroBuildersDAO' : 'Welcome Back ✊🏿'}</h2>
+)
 
 export const App = () => {
   console.log('bundleDropModule.address:', bundleDropModule.address)
@@ -66,8 +68,8 @@ export const App = () => {
   if (!address) {
     return (
       <LandingContainer>
-        <Welcome />
-        <button onClick={() => connectWallet('injected')}>
+        <Welcome isMember={Boolean(membershipNftAddress)} />
+        <button onClick={() => connectWallet('injected')} className="btn-hero">
           Connect your Wallet
         </button>
       </LandingContainer>
@@ -94,15 +96,15 @@ export const App = () => {
 
   return (
     <LandingContainer>
-      <Welcome />
+      <Welcome isMember={Boolean(membershipNftAddress)} />
       {isNFTClaimed ? (
-        <div>
+        <div className="member-page">
           <p>
-            Membership nft:{' '}
+            View your membership NFT on{' '}
             <a
               href={`https://testnets.opensea.io/assets/${membershipNftAddress}/0`}
             >
-              View on Opensea
+              On Opensea
             </a>{' '}
           </p>
         </div>
