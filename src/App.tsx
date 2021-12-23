@@ -14,6 +14,8 @@ export const LandingContainer: React.FC = ({children}) => (
 const Welcome: React.FC = () => <h2>Welcome to the AfroBuildersDAO</h2>
 
 export const App = () => {
+  console.log('bundleDropModule.address:', bundleDropModule.address)
+
   const {connectWallet, address, error, provider} = useWeb3()
   // State variable for us to know if user has our NFT.
   const [isNFTClaimed, setIsNFTClaimed] = React.useState(false)
@@ -46,6 +48,8 @@ export const App = () => {
             setIsNFTClaimed(true)
             // TODO: get and set the membership NFT address
             console.log('🌟 this user has a membership NFT!')
+
+            setMembershipNftAddress(bundleDropModule.address)
           } else {
             setIsNFTClaimed(false)
             console.log("😭 this user doesn't have a membership NFT.")
@@ -96,7 +100,7 @@ export const App = () => {
           <p>
             Membership nft:{' '}
             <a
-              href={`https://testnets.opensea.io/assets${membershipNftAddress}/0`}
+              href={`https://testnets.opensea.io/assets/${membershipNftAddress}/0`}
             >
               View on Opensea
             </a>{' '}
