@@ -16,8 +16,6 @@ const Welcome: React.FC<{isMember: boolean}> = ({isMember}) => (
 )
 
 export const App = () => {
-  console.log('bundleDropModule.address:', bundleDropModule.address)
-
   const {connectWallet, address, error, provider} = useWeb3()
   // State variable for us to know if user has our NFT.
   const [isNFTClaimed, setIsNFTClaimed] = React.useState(false)
@@ -68,7 +66,7 @@ export const App = () => {
   if (!address) {
     return (
       <LandingContainer>
-        <Welcome isMember={Boolean(membershipNftAddress)} />
+        <Welcome isMember={Boolean(address && membershipNftAddress)} />
         <button onClick={() => connectWallet('injected')} className="btn-hero">
           Connect your Wallet
         </button>
@@ -96,12 +94,14 @@ export const App = () => {
 
   return (
     <LandingContainer>
-      <Welcome isMember={Boolean(membershipNftAddress)} />
+      <Welcome isMember={Boolean(address && membershipNftAddress)} />
       {isNFTClaimed ? (
         <div className="member-page">
           <p>
             View your membership NFT on{' '}
             <a
+              target="_blank"
+              rel="noopener noreferrer"
               href={`https://testnets.opensea.io/assets/${membershipNftAddress}/0`}
             >
               On Opensea

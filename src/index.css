@@ -146,3 +146,9 @@ button:disabled {
   opacity: 0.8;
   pointer-events: none;
 }
+
+.disconnect-wallet-button {
+  background: -webkit-linear-gradient(left, #35aee2, #ff0000);
+  background-size: 100% 200%;
+  animation: gradient-animation 4s ease infinite;
+}
