@@ -15,7 +15,7 @@ const shortenAddress = (str: string) =>
   str.substring(0, 6) + '...' + str.substring(str.length - 4)
 
 export const App = () => {
-  const {connectWallet, address, error, provider} = useWeb3()
+  const {connectWallet, address, provider} = useWeb3()
   // State variable for us to know if user has our NFT.
   const [isNFTClaimed, setIsNFTClaimed] = React.useState(false)
   // State to keep a loading state while the NFT is minting.
@@ -27,7 +27,7 @@ export const App = () => {
   >({})
   const [memberAddresses, setMemberAddresses] = React.useState<string[]>([])
 
-  // gets addresses of all that hold the membership NFT
+  // gets all the addresses of members who hold an NFT from our ERC-1155 contract.
   React.useEffect(() => {
     if (!isNFTClaimed) return
 
@@ -42,7 +42,7 @@ export const App = () => {
     )
   }, [isNFTClaimed])
 
-  // gets the amount of tokens each member has
+  // gets the token balances of everyone who hold’s our token on our ERC-20 contract.
   React.useEffect(() => {
     if (!isNFTClaimed) return
 
@@ -118,6 +118,41 @@ export const App = () => {
     )
   }
 
+  if (isNFTClaimed) {
+    return (
+      <LandingContainer>
+        <div className="member-page">
+          <WelcomeContainer
+            isMember={Boolean(address && membershipNftAddress)}
+          />
+          <div>
+            <div>
+              <h2>Member List</h2>
+              <table className="card">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Token Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {memberList.map(member => {
+                    return (
+                      <tr key={member.address}>
+                        <td>{shortenAddress(member.address)}</td>
+                        <td>{member.tokenAmount}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </LandingContainer>
+    )
+  }
+
   const mintNft = () => {
     setIsMinting(true)
     bundleDropModule
@@ -138,28 +173,12 @@ export const App = () => {
 
   return (
     <LandingContainer>
-      <WelcomeContainer isMember={Boolean(address && membershipNftAddress)} />
-      {isNFTClaimed ? (
-        <div className="member-page">
-          <p>
-            View your membership NFT on{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`https://testnets.opensea.io/assets/${membershipNftAddress}/0`}
-            >
-              On Opensea
-            </a>{' '}
-          </p>
-        </div>
-      ) : (
-        <div className="mint-nft">
-          <h1>Mint your free 🍪DAO Membership NFT</h1>
-          <button disabled={isMinting} onClick={() => mintNft()}>
-            {isMinting ? 'Minting...' : 'Mint your nft (FREE)'}
-          </button>
-        </div>
-      )}
+      <div className="mint-nft">
+        <h1>Mint your free 🍪DAO Membership NFT</h1>
+        <button disabled={isMinting} onClick={() => mintNft()}>
+          {isMinting ? 'Minting...' : 'Mint your nft (FREE)'}
+        </button>
+      </div>
     </LandingContainer>
   )
 }
