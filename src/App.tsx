@@ -1,19 +1,18 @@
 import * as React from 'react'
 import {useWeb3} from '@3rdweb/hooks'
 import {ThirdwebSDK} from '@3rdweb/sdk'
-
+import {ethers} from 'ethers'
+import {TOKEN_ADDRESS, BUNDLE_DROP_ADDRESS} from './contracts.js'
+import {LandingContainer, WelcomeContainer} from './components'
 // instatiate the ThirdwebSDK on Rinkeby.
 const sdk = new ThirdwebSDK('rinkeby')
 // grab a reference to the ERC-1155 contract.
-const bundleDropModule = sdk.getBundleDropModule(
-  '0xE0d9D544DC499f62519dA2614D3A842782Ed1FCf',
-)
-export const LandingContainer: React.FC = ({children}) => (
-  <div className="landing">{children}</div>
-)
-const Welcome: React.FC<{isMember: boolean}> = ({isMember}) => (
-  <h2> {!isMember ? 'Welcome to the AfroBuildersDAO' : 'Welcome Back ✊🏿'}</h2>
-)
+const bundleDropModule = sdk.getBundleDropModule(BUNDLE_DROP_ADDRESS)
+// get the token module
+const tokenModule = sdk.getTokenModule(TOKEN_ADDRESS)
+
+const shortenAddress = (str: string) =>
+  str.substring(0, 6) + '...' + str.substring(str.length - 4)
 
 export const App = () => {
   const {connectWallet, address, error, provider} = useWeb3()
@@ -22,6 +21,56 @@ export const App = () => {
   // State to keep a loading state while the NFT is minting.
   const [isMinting, setIsMinting] = React.useState(false)
   const [membershipNftAddress, setMembershipNftAddress] = React.useState('')
+  // tokens each member has
+  const [memberTokenAmounts, setMemberTokenAmounts] = React.useState<
+    Record<string, any>
+  >({})
+  const [memberAddresses, setMemberAddresses] = React.useState<string[]>([])
+
+  // gets addresses of all that hold the membership NFT
+  React.useEffect(() => {
+    if (!isNFTClaimed) return
+
+    bundleDropModule.getAllClaimerAddresses('0').then(
+      addresses => {
+        console.log('🚀 Members addresses', addresses)
+        setMemberAddresses(addresses)
+      },
+      err => {
+        console.error('failed to get member list', err)
+      },
+    )
+  }, [isNFTClaimed])
+
+  // gets the amount of tokens each member has
+  React.useEffect(() => {
+    if (!isNFTClaimed) return
+
+    tokenModule.getAllHolderBalances().then(
+      amounts => {
+        console.log('👜 Amounts', amounts)
+        setMemberTokenAmounts(amounts)
+      },
+      err => {
+        console.error('failed to get token amounts', err)
+      },
+    )
+  }, [isNFTClaimed])
+
+  // combines the memberAddresses and memberTokenAmounts into a single array
+  const memberList = React.useMemo(
+    () =>
+      memberAddresses.map(address => {
+        return {
+          address,
+          tokenAmount: ethers.utils.formatUnits(
+            memberTokenAmounts[address] || '0',
+            18,
+          ),
+        }
+      }),
+    [memberAddresses, memberTokenAmounts],
+  )
 
   // The signer is required to sign transactions on the blockchain.
   // Without it we can only read data, not write.
@@ -41,14 +90,9 @@ export const App = () => {
     const getIsNFTClaimed = async () => {
       await bundleDropModule.balanceOf(address, [0]).then(
         balance => {
-          console.log('balance:', balance)
           // nft claimed if balance > 0
-          console.log('balance.gt(0):', balance.gt(0))
           if (balance.gt(0)) {
             setIsNFTClaimed(true)
-            // TODO: get and set the membership NFT address
-            console.log('🌟 this user has a membership NFT!')
-
             setMembershipNftAddress(bundleDropModule.address)
           } else {
             setIsNFTClaimed(false)
@@ -66,7 +110,7 @@ export const App = () => {
   if (!address) {
     return (
       <LandingContainer>
-        <Welcome isMember={Boolean(address && membershipNftAddress)} />
+        <WelcomeContainer isMember={Boolean(address && membershipNftAddress)} />
         <button onClick={() => connectWallet('injected')} className="btn-hero">
           Connect your Wallet
         </button>
@@ -94,7 +138,7 @@ export const App = () => {
 
   return (
     <LandingContainer>
-      <Welcome isMember={Boolean(address && membershipNftAddress)} />
+      <WelcomeContainer isMember={Boolean(address && membershipNftAddress)} />
       {isNFTClaimed ? (
         <div className="member-page">
           <p>

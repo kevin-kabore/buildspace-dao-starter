@@ -1,9 +1,7 @@
 import {ethers} from 'ethers'
 import sdk from './1-initialize-sdk.js'
-
-const tokenModule = sdk.getTokenModule(
-  '0xbC1b9B1Fd398753B46e5F29EF22707eE3Dc0Ca98',
-)
+import {TOKEN_ADDRESS} from '../src/contracts.js'
+const tokenModule = sdk.getTokenModule(TOKEN_ADDRESS)
 
 ;(async () => {
   try {

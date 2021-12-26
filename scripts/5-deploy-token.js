@@ -1,7 +1,7 @@
 import sdk from './1-initialize-sdk.js'
-
+import {THIRD_WEB_APP_ADDRESS} from '../src/contracts.js'
 // app address to deploy
-const app = sdk.getAppModule('0xF57ac6dADe3b7C406b309FF29B5A5e2B3cEcB8ad')
+const app = sdk.getAppModule(THIRD_WEB_APP_ADDRESS)
 
 ;(async () => {
   try {

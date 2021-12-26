@@ -1,7 +1,7 @@
 import sdk from './1-initialize-sdk.js'
-
+import {BUNDLE_DROP_ADDRESS} from '../src/contracts.js'
 const bundleDrop = sdk.getBundleDropModule(
-  '0xE0d9D544DC499f62519dA2614D3A842782Ed1FCf', // module contract address
+  BUNDLE_DROP_ADDRESS, // module contract address
 )
 
 ;(async () => {

@@ -1,10 +1,8 @@
 import {ethers} from 'ethers'
 import sdk from './1-initialize-sdk.js'
-
+import {BUNDLE_DROP_ADDRESS} from '../src/contracts.js'
 // address of the ERC-1155 membership NFT contract
-const bundleDropModule = sdk.getBundleDropModule(
-  '0xE0d9D544DC499f62519dA2614D3A842782Ed1FCf',
-)
+const bundleDropModule = sdk.getBundleDropModule(BUNDLE_DROP_ADDRESS)
 
 // ERC-20 token contract address
 const tokenModule = sdk.getTokenModule(
