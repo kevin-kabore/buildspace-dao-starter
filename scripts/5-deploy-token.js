@@ -1,7 +1,7 @@
 import sdk from './1-initialize-sdk.js'
-import {THIRD_WEB_APP_ADDRESS} from '../src/contracts.js'
+import {APP_ADDRESS} from '../src/contracts.js'
 // app address to deploy
-const app = sdk.getAppModule(THIRD_WEB_APP_ADDRESS)
+const app = sdk.getAppModule(APP_ADDRESS)
 
 ;(async () => {
   try {
@@ -15,6 +15,6 @@ const app = sdk.getAppModule(THIRD_WEB_APP_ADDRESS)
       tokenModule.address,
     )
   } catch (e) {
-    console.error('failed to deploy token module', e)
+    console.error('❌ Failed to deploy token module', e)
   }
 })()

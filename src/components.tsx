@@ -3,6 +3,8 @@ export const LandingContainer: React.FC = ({children}) => (
 )
 export const WelcomeContainer: React.FC<{isMember: boolean}> = ({isMember}) => (
   <h2>
-    {!isMember ? 'Welcome to the AfroBuildersDAO (✊🏿,💻)' : '✊🏿 💻 Member Page'}
+    {!isMember
+      ? 'Welcome to the AfroBuildersDAO <✊🏿,💻 />'
+      : '<✊🏿, 💻 /> Member Page'}
   </h2>
 )

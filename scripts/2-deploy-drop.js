@@ -1,9 +1,9 @@
 import {ethers} from 'ethers'
 import sdk from './1-initialize-sdk.js'
 import {readFileSync} from 'fs'
-import {THIRD_WEB_APP_ADDRESS} from '../src/contracts.js'
+import {APP_ADDRESS} from '../src/contracts'
 
-const app = sdk.getAppModule(THIRD_WEB_APP_ADDRESS)
+const app = sdk.getAppModule(APP_ADDRESS)
 // address from initialize-sdk
 
 ;(async () => {
@@ -26,6 +26,6 @@ const app = sdk.getAppModule(THIRD_WEB_APP_ADDRESS)
     )
     console.log('✅ bundleDrop metadata:', await bundleDropModule.getMetadata())
   } catch (error) {
-    console.log('failed to deploy bundleDrop module', error)
+    console.log('❌ Failed to deploy bundleDrop module', error)
   }
 })()

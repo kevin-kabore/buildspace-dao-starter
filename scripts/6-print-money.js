@@ -1,6 +1,6 @@
 import {ethers} from 'ethers'
 import sdk from './1-initialize-sdk.js'
-import {TOKEN_ADDRESS} from '../src/contracts.js'
+import {TOKEN_ADDRESS} from '../src/contracts'
 const tokenModule = sdk.getTokenModule(TOKEN_ADDRESS)
 
 ;(async () => {
@@ -22,6 +22,6 @@ const tokenModule = sdk.getTokenModule(TOKEN_ADDRESS)
       '$AFB in circulation',
     )
   } catch (e) {
-    console.error('Failed to print money', e)
+    console.error('❌ Failed to print money', e)
   }
 })()

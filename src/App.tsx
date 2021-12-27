@@ -2,8 +2,10 @@ import * as React from 'react'
 import {useWeb3} from '@3rdweb/hooks'
 import {ThirdwebSDK} from '@3rdweb/sdk'
 import {ethers} from 'ethers'
-import {TOKEN_ADDRESS, BUNDLE_DROP_ADDRESS} from './contracts.js'
+import {TOKEN_ADDRESS, BUNDLE_DROP_ADDRESS} from './contracts'
 import {LandingContainer, WelcomeContainer} from './components'
+console.log('BUNDLE_DROP_ADDRESS:', BUNDLE_DROP_ADDRESS)
+console.log('TOKEN_ADDRESS:', TOKEN_ADDRESS)
 // instatiate the ThirdwebSDK on Rinkeby.
 const sdk = new ThirdwebSDK('rinkeby')
 // grab a reference to the ERC-1155 contract.
@@ -37,7 +39,7 @@ export const App = () => {
         setMemberAddresses(addresses)
       },
       err => {
-        console.error('failed to get member list', err)
+        console.error('❌ Failed to get member list', err)
       },
     )
   }, [isNFTClaimed])
@@ -52,7 +54,7 @@ export const App = () => {
         setMemberTokenAmounts(amounts)
       },
       err => {
-        console.error('failed to get token amounts', err)
+        console.error('❌ Failed to get token amounts', err)
       },
     )
   }, [isNFTClaimed])

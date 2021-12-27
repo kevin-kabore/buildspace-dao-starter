@@ -40,6 +40,6 @@ const tokenModule = sdk.getTokenModule(
       '✅ Successfully airdropped tokens to all the holders of the NFT!',
     )
   } catch (e) {
-    console.error('Failed to airdrop tokens', e)
+    console.error('❌ Failed to airdrop tokens', e)
   }
 })()
