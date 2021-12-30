@@ -2,6 +2,7 @@ import * as React from 'react'
 import {useWeb3} from '@3rdweb/hooks'
 import {ThirdwebSDK} from '@3rdweb/sdk'
 import {ethers} from 'ethers'
+import {UnsupportedChainIdError} from '@web3-react/core'
 import {TOKEN_ADDRESS, BUNDLE_DROP_ADDRESS, VOTE_ADDRESS} from './contracts'
 import {LandingContainer, WelcomeContainer} from './components'
 // instatiate the ThirdwebSDK on Rinkeby.
@@ -17,7 +18,7 @@ const shortenAddress = (str: string) =>
   str.substring(0, 6) + '...' + str.substring(str.length - 4)
 
 export const App = () => {
-  const {connectWallet, address, provider} = useWeb3()
+  const {connectWallet, address, provider, error} = useWeb3()
   const [isNFTClaimed, setIsNFTClaimed] = React.useState(false) // State variable for us to know if user has our NFT.
   const [isMinting, setIsMinting] = React.useState(false) // State to keep a loading state while the NFT is minting.
   const [membershipNftAddress, setMembershipNftAddress] = React.useState('')
@@ -154,6 +155,18 @@ export const App = () => {
           Connect your Wallet
         </button>
       </LandingContainer>
+    )
+  }
+
+  if (error instanceof UnsupportedChainIdError) {
+    return (
+      <div className="unsupported-network">
+        <h2>Please connect to Rinkeby</h2>
+        <p>
+          This dapp only works on the Rinkeby network, please switch networks in
+          your connected wallet.
+        </p>
+      </div>
     )
   }
 
