@@ -349,7 +349,7 @@ export const App = () => {
   return (
     <LandingContainer>
       <div className="mint-nft">
-        <h1>Mint your free 🍪DAO Membership NFT</h1>
+        <h1>Mint your free {'<✊🏿, 💻 />'} DAO Membership NFT</h1>
         <button disabled={isMinting} onClick={() => mintNft()}>
           {isMinting ? 'Minting...' : 'Mint your nft (FREE)'}
         </button>
