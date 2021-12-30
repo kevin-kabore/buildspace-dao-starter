@@ -36,7 +36,7 @@ const tokenModule = sdk.getTokenModule(TOKEN_ADDRESS)
   try {
     amount = 1_000
     proposal = `Should the DAO transfer ${amount} tokens from the treasury to
-    ${process.env.WALLET_ADDRESS} for being awesome?`
+    ${process.env.WALLET_ADDRESS} for developing the DAO?`
     await voteModule.propose(proposal, [
       {
         nativeTokenValue: 0,
