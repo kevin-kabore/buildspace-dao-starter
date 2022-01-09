@@ -4,7 +4,7 @@ export const LandingContainer: React.FC = ({children}) => (
 export const WelcomeContainer: React.FC<{isMember: boolean}> = ({isMember}) => (
   <h2>
     {!isMember
-      ? 'Welcome to the AfroBuildersDAO <✊🏿,💻 />'
+      ? 'Bienvenue au  AfroBuildersDAO <✊🏿,💻 />'
       : '<✊🏿, 💻 /> Member Page'}
   </h2>
 )
